@@ -322,6 +322,28 @@ const Model = class Model {
     }
 
     /**
+     * Records the addition of a new {@link Model} instance if it doesn't exist yet.
+     * Else update it.
+     *
+     * @param  {props} props - the new {@link Model}'s properties.
+     * @return {Model} a new {@link Model} instance.
+     */
+    static createOrMergeById(userProps) {
+        const idAttribute = this.idAttribute;
+        const idValue = userProps[idAttribute];
+        if (idValue === 'undefined' || idValue === null) {
+            throw new Error("Id is empty!");
+            return;
+        }
+        const model = this.withId(idValue);
+        if (model && model.id) {
+            model.update(userProps);
+        } else {
+            this.create(userProps);
+        }
+    }
+
+    /**
      * Records the addition of a new {@link Model} instance and returns it.
      *
      * @param  {props} props - the new {@link Model}'s properties.
